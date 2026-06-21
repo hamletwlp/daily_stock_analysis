@@ -57,25 +57,29 @@ python scripts/check_ai_assets.py
 
 ## 3. 仓库速览
 
-- 项目定位：股票智能分析系统，覆盖 A 股、港股、美股。
+- 项目定位：股票智能分析系统，覆盖 A 股、港股、美股，并支持日本 / 韩国 suffix-only 个股分析（`.T` / `.KS` / `.KQ`）。
 - 主流程：抓取数据 -> 技术分析/新闻检索 -> LLM 分析 -> 生成报告 -> 通知推送。
 - 关键入口：
-  - `main.py`：分析任务主入口
-  - `server.py`：FastAPI 服务入口
+  - `main.py`：分析任务主入口（CLI，含调度、复盘、回测、服务等子命令）
+  - `server.py`：FastAPI 服务入口（`uvicorn server:app`）
+  - `webui.py`：WebUI 启动脚本
   - `apps/dsa-web/`：Web 前端
   - `apps/dsa-desktop/`：Electron 桌面端
   - `.github/workflows/`：CI、发布、每日任务
 - 核心职责：
   - `src/core/`：主流程编排
-  - `src/services/`：业务服务层
+  - `src/services/`：业务服务层（分析、告警、回测、资讯情报、决策信号等）
   - `src/repositories/`：数据访问层
-  - `src/reports/`：报告生成
+  - `src/agent/`：问股 Agent / 对话编排与多智能体执行
+  - `src/llm/`：LLM 调用参数、错误处理与 usage telemetry
   - `src/schemas/`：Schema / 数据结构
+  - `src/notification_sender/`：通知发送渠道实现
+  - 报告生成：`src/formatters.py`、`src/report_language.py` 与 `templates/*.j2`（Jinja2 报告模板）
+  - `strategies/`：策略定义（YAML）
   - `data_provider/`：多数据源适配与 fallback
-  - `api/`：FastAPI API
+  - `api/`：FastAPI API（`api/v1/endpoints/` 为各业务端点）
   - `bot/`：机器人接入
-  - `scripts/`：本地脚本
-  - `.github/scripts/`：GitHub 自动化脚本
+  - `scripts/`：本地脚本；`.github/scripts/`：GitHub 自动化脚本
   - `tests/`：pytest 测试
   - `docs/`：文档与说明
 
